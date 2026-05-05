@@ -31,7 +31,17 @@ const Dashboard = () => {
         belumBayar: warga.length - sudahBayar,
         totalHariIni: transaksi.filter(t => t.status === 'lunas').reduce((sum, t) => sum + (t.jumlah || 0), 0)
       });
-      setTodayTransaksi(transaksi);
+
+      // Enrich transactions with correct noRumah from warga table
+      const enrichedTransaksi = transaksi.map(t => {
+        const detailWarga = warga.find(w => w.id === t.wargaId);
+        return {
+          ...t,
+          noRumah: detailWarga ? detailWarga.noRumah : t.wargaId
+        };
+      });
+
+      setTodayTransaksi(enrichedTransaksi);
       setLoading(false);
     } catch (error) {
       console.error("Error loading dashboard data:", error);
@@ -177,7 +187,7 @@ const Dashboard = () => {
                 </div>
                 <div className="activity-info">
                   <h4>{t.namaWarga}</h4>
-                  <p>{t.alamat || 'Rumah No. ' + t.wargaId}</p>
+                  <p>{t.alamat || 'Rumah No. ' + t.noRumah}</p>
                 </div>
                 <div className="activity-amount">
                   {t.status === 'lunas' ? `Rp ${t.jumlah?.toLocaleString()}` : 'Kosong'}
