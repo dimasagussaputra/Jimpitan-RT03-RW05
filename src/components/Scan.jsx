@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useZxing } from 'react-zxing';
 import { 
   Camera, CameraOff, CheckCircle, XCircle, 
@@ -13,12 +13,7 @@ const Scan = () => {
   const [manualInput, setManualInput] = useState('');
   const [showManual, setShowManual] = useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    loadWarga();
-  }, []);
-
-  const loadWarga = async () => {
+  const loadWarga = useCallback(async () => {
     const warga = await getAllWarga();
     warga.sort((a, b) => {
       const numA = a.noRumah || '';
@@ -26,7 +21,11 @@ const Scan = () => {
       return numA.toString().localeCompare(numB.toString(), undefined, { numeric: true, sensitivity: 'base' });
     });
     setWargaList(warga);
-  };
+  }, []);
+
+  useEffect(() => {
+    loadWarga();
+  }, [loadWarga]);
 
   const { ref } = useZxing({
     paused: !scanning,

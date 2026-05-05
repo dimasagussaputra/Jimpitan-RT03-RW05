@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Search, Edit2, Trash2, QrCode, 
   UserPlus, X, CheckCircle, Eye
@@ -25,12 +25,7 @@ const Warga = () => {
   const [notification, setNotification] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    loadWarga();
-  }, []);
-
-  const loadWarga = async () => {
+  const loadWarga = useCallback(async () => {
     const data = await getAllWarga();
     data.sort((a, b) => {
       const numA = a.noRumah || '';
@@ -38,7 +33,11 @@ const Warga = () => {
       return numA.toString().localeCompare(numB.toString(), undefined, { numeric: true, sensitivity: 'base' });
     });
     setWarga(data);
-  };
+  }, []);
+
+  useEffect(() => {
+    loadWarga();
+  }, [loadWarga]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

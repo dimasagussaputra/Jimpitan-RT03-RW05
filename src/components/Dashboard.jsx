@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Users, Calendar, DollarSign, 
   CheckCircle, XCircle, Clock, RefreshCcw 
@@ -17,12 +17,7 @@ const Dashboard = () => {
   const [todayTransaksi, setTodayTransaksi] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       const warga = await getAllWarga();
       const today = new Date().toISOString().split('T')[0];
@@ -34,16 +29,19 @@ const Dashboard = () => {
         totalWarga: warga.length,
         sudahBayar: sudahBayar,
         belumBayar: warga.length - sudahBayar,
-        totalHariIni: transaksi.reduce((sum, t) => sum + (t.jumlah || 0), 0)
+        totalHariIni: transaksi.filter(t => t.status === 'lunas').reduce((sum, t) => sum + (t.jumlah || 0), 0)
       });
-
       setTodayTransaksi(transaksi);
+      setLoading(false);
     } catch (error) {
-      console.error('Error loading dashboard:', error);
-    } finally {
+      console.error("Error loading dashboard data:", error);
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 

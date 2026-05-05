@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Download,
   ChevronLeft, ChevronRight, FileText, RefreshCcw
@@ -14,19 +14,18 @@ const Laporan = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [detailTransaksi, setDetailTransaksi] = useState([]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    loadData();
-  }, [currentMonth]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     const wargaData = await getAllWarga();
     const bulan = format(currentMonth, 'yyyy-MM');
     const transaksiData = await getTransaksiByBulan(bulan);
     
     setWarga(wargaData);
     setTransaksi(transaksiData);
-  };
+  }, [currentMonth]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const getDaysInMonth = () => {
     const start = startOfMonth(currentMonth);
