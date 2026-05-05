@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [todayTransaksi, setTodayTransaksi] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadDashboardData();
   }, []);

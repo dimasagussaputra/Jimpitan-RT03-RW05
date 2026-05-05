@@ -13,6 +13,7 @@ const Scan = () => {
   const [manualInput, setManualInput] = useState('');
   const [showManual, setShowManual] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadWarga();
   }, []);

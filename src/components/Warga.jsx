@@ -25,6 +25,7 @@ const Warga = () => {
   const [notification, setNotification] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadWarga();
   }, []);

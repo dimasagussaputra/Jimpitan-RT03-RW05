@@ -14,8 +14,8 @@ const Laporan = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [detailTransaksi, setDetailTransaksi] = useState([]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     loadData();
   }, [currentMonth]);
 
