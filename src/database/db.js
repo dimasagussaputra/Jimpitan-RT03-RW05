@@ -5,9 +5,21 @@ const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Helper functions (Dummy untuk kompatibilitas dengan App.jsx)
+// --- HELPER MAPPING ---
+// Memetakan hasil dari Supabase (lowercase) kembali ke CamelCase agar UI tidak rusak
+const mapWarga = (w) => ({
+  ...w,
+  noRumah: w.norumah,
+  jumlahDefault: w.jumlahdefault
+});
+
+const mapTransaksi = (t) => ({
+  ...t,
+  wargaId: t.wargaid,
+  namaWarga: t.namawarga
+});
+
 export const initDB = async () => {
-  console.log("Supabase Connection Initialized");
   return true;
 };
 
@@ -20,15 +32,15 @@ export const addWarga = async (warga) => {
       alamat: warga.alamat,
       rt: warga.rt,
       rw: warga.rw,
-      noRumah: warga.noRumah,
-      jumlahDefault: warga.jumlahDefault,
+      norumah: warga.noRumah,
+      jumlahdefault: warga.jumlahDefault,
       telepon: warga.telepon,
       barcode: `JMP-${Date.now()}`
     }])
     .select();
   
   if (error) throw error;
-  return data[0];
+  return mapWarga(data[0]);
 };
 
 export const getAllWarga = async () => {
@@ -37,7 +49,7 @@ export const getAllWarga = async () => {
     .select('*');
   
   if (error) throw error;
-  return data || [];
+  return (data || []).map(mapWarga);
 };
 
 export const updateWarga = async (id, updatedData) => {
@@ -48,15 +60,15 @@ export const updateWarga = async (id, updatedData) => {
       alamat: updatedData.alamat,
       rt: updatedData.rt,
       rw: updatedData.rw,
-      noRumah: updatedData.noRumah,
-      jumlahDefault: updatedData.jumlahDefault,
+      norumah: updatedData.noRumah,
+      jumlahdefault: updatedData.jumlahDefault,
       telepon: updatedData.telepon
     })
     .eq('id', id)
     .select();
   
   if (error) throw error;
-  return data[0];
+  return mapWarga(data[0]);
 };
 
 export const deleteWarga = async (id) => {
@@ -64,7 +76,6 @@ export const deleteWarga = async (id) => {
     .from('warga')
     .delete()
     .eq('id', id);
-  
   if (error) throw error;
 };
 
@@ -74,8 +85,8 @@ export const addTransaksi = async (transaksi) => {
   const { data, error } = await supabase
     .from('transaksi')
     .insert([{
-      wargaId: transaksi.wargaId,
-      namaWarga: transaksi.namaWarga,
+      wargaid: transaksi.wargaId,
+      namawarga: transaksi.namaWarga,
       barcode: transaksi.barcode,
       jumlah: transaksi.jumlah,
       status: transaksi.status || 'lunas',
@@ -85,7 +96,7 @@ export const addTransaksi = async (transaksi) => {
     .select();
   
   if (error) throw error;
-  return data[0];
+  return mapTransaksi(data[0]);
 };
 
 export const getTransaksiByTanggal = async (tanggal) => {
@@ -95,7 +106,7 @@ export const getTransaksiByTanggal = async (tanggal) => {
     .eq('tanggal', tanggal);
   
   if (error) throw error;
-  return data || [];
+  return (data || []).map(mapTransaksi);
 };
 
 export const getTransaksiByBulan = async (bulan) => {
@@ -105,7 +116,7 @@ export const getTransaksiByBulan = async (bulan) => {
     .eq('bulan', bulan);
   
   if (error) throw error;
-  return data || [];
+  return (data || []).map(mapTransaksi);
 };
 
 export const deleteTransaksiHariIni = async (tanggal) => {
@@ -113,7 +124,6 @@ export const deleteTransaksiHariIni = async (tanggal) => {
     .from('transaksi')
     .delete()
     .eq('tanggal', tanggal);
-  
   if (error) throw error;
 };
 
@@ -122,7 +132,6 @@ export const deleteTransaksiBulanIni = async (bulan) => {
     .from('transaksi')
     .delete()
     .eq('bulan', bulan);
-  
   if (error) throw error;
 };
 
@@ -133,15 +142,15 @@ export const verifyAdmin = async (username, password) => {
     .select('*')
     .eq('username', username)
     .eq('password', password)
-    .single();
+    .maybeSingle();
   
-  if (error && error.code !== 'PGRST116') { // PGRST116 means no rows found
-    throw error;
+  if (error) {
+    console.error("Login error:", error);
+    return null;
   }
-  return data || null;
+  return data;
 };
 
-// Dummy initAdmin karena sudah di-insert via SQL
 export const initAdmin = async () => {
   return true;
 };
