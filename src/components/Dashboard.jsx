@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Home, Users, Calendar, TrendingUp, DollarSign, 
+  Users, Calendar, DollarSign, 
   CheckCircle, XCircle, Clock, RefreshCcw 
 } from 'lucide-react';
 import { getAllWarga, getTransaksiByTanggal, deleteTransaksiHariIni } from '../database/db';

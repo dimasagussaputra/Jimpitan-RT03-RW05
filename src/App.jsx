@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, ScanLine, Users, FileText, 
-  LogOut, Menu, X 
+  LogOut 
 } from 'lucide-react';
 
 import SplashScreen from './components/SplashScreen';

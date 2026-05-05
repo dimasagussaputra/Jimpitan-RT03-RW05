@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Plus, Search, Edit2, Trash2, QrCode, 
-  Download, UserPlus, X, CheckCircle, Eye
+  Search, Edit2, Trash2, QrCode, 
+  UserPlus, X, CheckCircle, Eye
 } from 'lucide-react';
 import { getAllWarga, addWarga, updateWarga, deleteWarga } from '../database/db';
 import QRCode from 'react-qr-code';

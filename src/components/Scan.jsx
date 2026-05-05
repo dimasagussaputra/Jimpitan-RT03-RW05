@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useZxing } from 'react-zxing';
 import { 
   Camera, CameraOff, CheckCircle, XCircle, 
-  RotateCcw, QrCode, Home, Keyboard
+  Home, Keyboard
 } from 'lucide-react';
 import { getAllWarga, addTransaksi } from '../database/db';
 
@@ -42,7 +42,6 @@ const Scan = () => {
     
     if (warga) {
       const now = new Date();
-      const today = now.toISOString().split('T')[0];
       
       // Aturan khusus: Hari Kamis (malam Jumat) = Rp 1.000
       const isKamis = now.getDay() === 4;

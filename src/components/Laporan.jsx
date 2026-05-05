@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Calendar, Download, TrendingUp, AlertCircle,
+  Download,
   ChevronLeft, ChevronRight, FileText, RefreshCcw
 } from 'lucide-react';
 import { getAllWarga, getTransaksiByBulan, getTransaksiByTanggal, deleteTransaksiHariIni, deleteTransaksiBulanIni } from '../database/db';
@@ -15,6 +15,7 @@ const Laporan = () => {
   const [detailTransaksi, setDetailTransaksi] = useState([]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     loadData();
   }, [currentMonth]);
 
@@ -33,13 +34,7 @@ const Laporan = () => {
     return eachDayOfInterval({ start, end });
   };
 
-  const getStatusForDay = (wargaId, date) => {
-    const dateStr = format(date, 'yyyy-MM-dd');
-    const trans = transaksi.find(t => 
-      t.wargaId === wargaId && t.tanggal === dateStr
-    );
-    return trans ? trans.status : null;
-  };
+
 
   const getStats = (wargaId) => {
     let wargaTrans = transaksi.filter(t => t.wargaId === wargaId);
